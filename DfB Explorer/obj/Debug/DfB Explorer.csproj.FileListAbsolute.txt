@@ -1,0 +1,21 @@
+c:\users\chad\documents\visual studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\DfB Explorer.exe.config
+c:\users\chad\documents\visual studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\DfB Explorer.exe
+c:\users\chad\documents\visual studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\DfB Explorer.pdb
+c:\users\chad\documents\visual studio 2013\Projects\DfB Explorer\DfB Explorer\obj\Debug\DfB Explorer.csprojResolveAssemblyReference.cache
+c:\users\chad\documents\visual studio 2013\Projects\DfB Explorer\DfB Explorer\obj\Debug\DfB_Explorer.FormMain.resources
+c:\users\chad\documents\visual studio 2013\Projects\DfB Explorer\DfB Explorer\obj\Debug\DfB_Explorer.Properties.Resources.resources
+c:\users\chad\documents\visual studio 2013\Projects\DfB Explorer\DfB Explorer\obj\Debug\DfB Explorer.csproj.GenerateResource.Cache
+c:\users\chad\documents\visual studio 2013\Projects\DfB Explorer\DfB Explorer\obj\Debug\DfB Explorer.exe
+c:\users\chad\documents\visual studio 2013\Projects\DfB Explorer\DfB Explorer\obj\Debug\DfB Explorer.pdb
+c:\Users\Chad\Documents\Visual Studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\Dropbox.Api.dll
+c:\Users\Chad\Documents\Visual Studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\Microsoft.Threading.Tasks.dll
+c:\Users\Chad\Documents\Visual Studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+c:\Users\Chad\Documents\Visual Studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\Microsoft.Threading.Tasks.Extensions.dll
+c:\Users\Chad\Documents\Visual Studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\System.Net.Http.Extensions.dll
+c:\Users\Chad\Documents\Visual Studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\System.Net.Http.Primitives.dll
+c:\Users\Chad\Documents\Visual Studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\Dropbox.Api.xml
+c:\Users\Chad\Documents\Visual Studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\Microsoft.Threading.Tasks.xml
+c:\Users\Chad\Documents\Visual Studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\Microsoft.Threading.Tasks.Extensions.xml
+c:\Users\Chad\Documents\Visual Studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+c:\Users\Chad\Documents\Visual Studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\System.Net.Http.Extensions.xml
+c:\Users\Chad\Documents\Visual Studio 2013\Projects\DfB Explorer\DfB Explorer\bin\Debug\System.Net.Http.Primitives.xml
