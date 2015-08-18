@@ -57,7 +57,7 @@ namespace DfB_Explorer
             [DataMember]
             public string client_mtime { get; set; }
             [DataMember]
-            public string shared_folder { get; set; }
+            public List<Shared_Folder> shared_folder { get; set; }
             [DataMember]
             public string read_only { get; set; }
             [DataMember]
@@ -66,6 +66,14 @@ namespace DfB_Explorer
             public string modifier { get; set; }
             [DataMember]
             public List<FolderContent> contents { get; set; }
+        }
+
+        [DataContract]
+        class Shared_Folder
+        {
+            //permissions:
+            [DataMember]
+            public string shared_folder_id { get; set; }
         }
 
         [DataContract]
@@ -171,6 +179,9 @@ namespace DfB_Explorer
             treeViewUsers.NodeMouseClick +=
                 new TreeNodeMouseClickEventHandler(treeViewUsers_NodeMouseClick);
 
+            treeViewFiles.NodeMouseClick +=
+                new TreeNodeMouseClickEventHandler(treeViewFiles_NodeMouseClick);
+
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -200,9 +211,9 @@ namespace DfB_Explorer
                 labelTeamName.Text = "Connected to: " + teamInformation.name;
                 pictureBoxConnected.SizeMode = PictureBoxSizeMode.Zoom;
                 pictureBoxConnected.Image = imageList2.Images[1];
-                populateDfBMembers(dfbTeam);
                 //populate the global object for use throughout the app.
                 gbl_TeamObject = dfbTeam;
+                populateDfBMembers(gbl_TeamObject);
             }
 
             // Set cursor as default arrow
@@ -225,6 +236,7 @@ namespace DfB_Explorer
                 if (fc.is_dir == "false")
                 {
                     treeNode.ImageKey = "file";
+                    treeNode.SelectedImageKey = "file";
                 }
                 else
                 {
@@ -233,6 +245,24 @@ namespace DfB_Explorer
                 treeViewFiles.Nodes.Add(treeNode);
                 Console.WriteLine(tmpWithoutSlash);
             }
+        }
+
+        void treeViewFiles_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            //dont re-do the call if the node is already populated
+            if (e.Node.IsExpanded == false && e.Node.ImageKey != "file")
+            {
+                string slashPath = "/" + e.Node.FullPath;
+                Console.WriteLine(slashPath);
+                FolderListing subfolder = Get_listing(slashPath, txtToken.Text, gbl_TeamObject.members[e.Node.Index].profile.member_id);
+                Console.WriteLine(subfolder.contents);
+            }
+            else
+            {
+                //second click user wants to collapse tree
+                e.Node.Collapse();
+            }
+            
         }
 
         private void populateDfBMembers(DfBTeam dfbTeam)
@@ -379,6 +409,10 @@ namespace DfB_Explorer
 
         private FolderListing Get_listing(string folderpath, string dfb_token, string dfb_member_id)
         {
+            Console.WriteLine("Get_listing: folderpath: " + folderpath);
+            Console.WriteLine("Get_listing: folderpath: " + dfb_token);
+            Console.WriteLine("Get_listing: folderpath: " + dfb_member_id);
+            
             if (folderpath == null)
             {
                 Console.WriteLine("Empty path");
@@ -415,7 +449,7 @@ namespace DfB_Explorer
                     try
                     {
                         var obj = (FolderListing)ser.ReadObject(stream);
-                        Console.WriteLine(obj.path);
+                        //Console.WriteLine(obj.path);
 
                         // Cleanup the streams and the response.
                         reader.Close();
@@ -427,7 +461,7 @@ namespace DfB_Explorer
                     catch
                     {
                         FolderListing failListing = new FolderListing();
-                        failListing.bytes = -1;
+                        failListing.bytes = -2;
                         return failListing;
                     }
 
