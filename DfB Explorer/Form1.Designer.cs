@@ -38,6 +38,7 @@
             this.pictureBoxConnected = new System.Windows.Forms.PictureBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.labelTeamName = new System.Windows.Forms.Label();
+            this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxConnected)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,14 +50,18 @@
             this.treeViewUsers.Location = new System.Drawing.Point(5, 43);
             this.treeViewUsers.Name = "treeViewUsers";
             this.treeViewUsers.SelectedImageIndex = 3;
-            this.treeViewUsers.Size = new System.Drawing.Size(333, 569);
+            this.treeViewUsers.Size = new System.Drawing.Size(262, 569);
             this.treeViewUsers.TabIndex = 0;
             // 
             // treeViewFiles
             // 
-            this.treeViewFiles.Location = new System.Drawing.Point(345, 43);
+            this.treeViewFiles.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.treeViewFiles.ImageIndex = 4;
+            this.treeViewFiles.ImageList = this.imageList1;
+            this.treeViewFiles.Location = new System.Drawing.Point(273, 43);
             this.treeViewFiles.Name = "treeViewFiles";
-            this.treeViewFiles.Size = new System.Drawing.Size(394, 569);
+            this.treeViewFiles.SelectedImageIndex = 5;
+            this.treeViewFiles.Size = new System.Drawing.Size(466, 569);
             this.treeViewFiles.TabIndex = 1;
             // 
             // label1
@@ -104,9 +109,13 @@
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "tick");
-            this.imageList1.Images.SetKeyName(1, "unplugged");
+            this.imageList1.Images.SetKeyName(1, "unpluggedold");
             this.imageList1.Images.SetKeyName(2, "user.png");
             this.imageList1.Images.SetKeyName(3, "cloudusericon.png");
+            this.imageList1.Images.SetKeyName(4, "folder_closed");
+            this.imageList1.Images.SetKeyName(5, "folder_open");
+            this.imageList1.Images.SetKeyName(6, "file");
+            this.imageList1.Images.SetKeyName(7, "unplugged");
             // 
             // labelTeamName
             // 
@@ -117,6 +126,14 @@
             this.labelTeamName.Size = new System.Drawing.Size(86, 17);
             this.labelTeamName.TabIndex = 6;
             this.labelTeamName.Text = "Disconnected";
+            // 
+            // imageList2
+            // 
+            this.imageList2.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList2.ImageStream")));
+            this.imageList2.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList2.Images.SetKeyName(0, "unpluggedold");
+            this.imageList2.Images.SetKeyName(1, "tick");
+            this.imageList2.Images.SetKeyName(2, "unplugged");
             // 
             // FormMain
             // 
@@ -150,6 +167,7 @@
         private System.Windows.Forms.PictureBox pictureBoxConnected;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Label labelTeamName;
+        private System.Windows.Forms.ImageList imageList2;
     }
 }
 

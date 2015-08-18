@@ -18,7 +18,87 @@ namespace DfB_Explorer
 {
     public partial class FormMain : Form
     {
-        
+        DfBTeam gbl_TeamObject;
+
+        [DataContract]
+        class FolderListing
+        {
+            //folder listing:
+            [DataMember]
+            public string size { get; set; }
+            [DataMember]
+            public string hash { get; set; }
+            [DataMember]
+            public double bytes { get; set; }
+            [DataMember]
+            public string thumb_exists { get; set; }
+            [DataMember]
+            public string rev { get; set; }
+            [DataMember]
+            public string modified { get; set; }
+            [DataMember]
+            public string path { get; set; }
+            [DataMember]
+            public string is_dir { get; set; }
+            [DataMember]
+            public string icon { get; set; }
+            [DataMember]
+            public string root { get; set; }
+            [DataMember]
+            public string revision { get; set; }
+
+            //not in sample
+            [DataMember]
+            public string is_deleted { get; set; }
+            [DataMember]
+            public string photo_info { get; set; }
+            [DataMember]
+            public string video_info { get; set; }
+            [DataMember]
+            public string client_mtime { get; set; }
+            [DataMember]
+            public string shared_folder { get; set; }
+            [DataMember]
+            public string read_only { get; set; }
+            [DataMember]
+            public string parent_shared_folder_id { get; set; }
+            [DataMember]
+            public string modifier { get; set; }
+            [DataMember]
+            public List<FolderContent> contents { get; set; }
+        }
+
+        [DataContract]
+        class FolderContent
+        {
+            [DataMember]
+            public string size { get; set; }
+            [DataMember]
+            public string rev { get; set; }
+            [DataMember]
+            public double bytes { get; set; }
+            [DataMember]
+            public string thumb_exists { get; set; }
+            [DataMember]
+            public string modified { get; set; }
+            [DataMember]
+            public string client_mtime { get; set; }
+            [DataMember]
+            public string path { get; set; }
+            [DataMember]
+            public string photo_info { get; set; }
+            [DataMember]
+            public string is_dir { get; set; }
+            [DataMember]
+            public string icon { get; set; }
+            [DataMember]
+            public string root { get; set; }
+            [DataMember]
+            public string mime_type { get; set; }
+            [DataMember]
+            public string revision { get; set; }
+        }
+
         [DataContract]
         class BasicTeamInformation
         {
@@ -86,6 +166,11 @@ namespace DfB_Explorer
         public FormMain()
         {
             InitializeComponent();
+
+            //register an event to handle the treeview clicks.
+            treeViewUsers.NodeMouseClick +=
+                new TreeNodeMouseClickEventHandler(treeViewUsers_NodeMouseClick);
+
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -95,7 +180,7 @@ namespace DfB_Explorer
             txtToken.Text = "32Wp8V0dZ28AAAAAAADJlETVJXSVl4MdK_vjaDRxqFZ8_Id_qdbZPt0JoTOmfglU"; //hanfordinc.com
 
             pictureBoxConnected.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBoxConnected.Image = imageList1.Images[1];
+            pictureBoxConnected.Image = imageList2.Images[2];
 
         }
 
@@ -114,13 +199,40 @@ namespace DfB_Explorer
             {
                 labelTeamName.Text = "Connected to: " + teamInformation.name;
                 pictureBoxConnected.SizeMode = PictureBoxSizeMode.Zoom;
-                pictureBoxConnected.Image = imageList1.Images[0];
+                pictureBoxConnected.Image = imageList2.Images[1];
                 populateDfBMembers(dfbTeam);
+                //populate the global object for use throughout the app.
+                gbl_TeamObject = dfbTeam;
             }
-
 
             // Set cursor as default arrow
             Cursor.Current = Cursors.Default;    
+        }
+
+        void treeViewUsers_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            treeViewFiles.Nodes.Clear();
+            FolderListing rootFolderListing = Get_listing("/", txtToken.Text, gbl_TeamObject.members[e.Node.Index].profile.member_id);
+            foreach (FolderContent fc in rootFolderListing.contents)
+            {
+                //strip the backslash for display in the tree
+                string tmp = fc.path;
+                string tmpWithoutSlash = tmp.Substring(1);
+
+                TreeNode treeNode = new TreeNode(tmpWithoutSlash);
+
+                //change icon for files/folders
+                if (fc.is_dir == "false")
+                {
+                    treeNode.ImageKey = "file";
+                }
+                else
+                {
+                    treeNode.ImageKey = "folder_closed";
+                }
+                treeViewFiles.Nodes.Add(treeNode);
+                Console.WriteLine(tmpWithoutSlash);
+            }
         }
 
         private void populateDfBMembers(DfBTeam dfbTeam)
@@ -264,6 +376,73 @@ namespace DfB_Explorer
             }
 
         }
+
+        private FolderListing Get_listing(string folderpath, string dfb_token, string dfb_member_id)
+        {
+            if (folderpath == null)
+            {
+                Console.WriteLine("Empty path");
+            }
+
+            else
+            {
+                string uri = "https://api.dropbox.com/1/metadata/auto" + folderpath; // +"?list=false";
+                WebRequest request = WebRequest.Create(uri);
+
+                request.Method = "GET";
+                request.ContentType = "application/json";
+                String authheader = "Authorization:Bearer " + dfb_token;
+                request.Headers.Add(authheader);
+                request.Headers.Add("X-Dropbox-Perform-As-Team-Member:" + dfb_member_id);
+
+                try
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                    // Get the stream containing content returned by the server.
+                    Stream dataStream = response.GetResponseStream();
+
+                    // Open the stream using a StreamReader for easy access.
+                    StreamReader reader = new StreamReader(dataStream);
+
+                    // Read the content. 
+                    string responseFromServer = reader.ReadToEnd();
+
+                    //serialize the json
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(FolderListing));
+                    MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(responseFromServer));
+                    try
+                    {
+                        var obj = (FolderListing)ser.ReadObject(stream);
+                        Console.WriteLine(obj.path);
+
+                        // Cleanup the streams and the response.
+                        reader.Close();
+                        dataStream.Close();
+                        response.Close();
+
+                        return obj;
+                    }
+                    catch
+                    {
+                        FolderListing failListing = new FolderListing();
+                        failListing.bytes = -1;
+                        return failListing;
+                    }
+
+                }
+
+                catch (WebException error)
+                {
+                    Console.WriteLine(error);
+                }
+
+            }
+            FolderListing brokenListing = new FolderListing();
+            brokenListing.bytes = -1;
+            return brokenListing;
+        } //end of get_listing
 
 
     }
