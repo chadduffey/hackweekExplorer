@@ -180,23 +180,26 @@ namespace DfB_Explorer
             treeViewUsers.NodeMouseClick +=
                 new TreeNodeMouseClickEventHandler(treeViewUsers_NodeMouseClick);
 
-            treeViewFiles.NodeMouseClick +=
-                new TreeNodeMouseClickEventHandler(treeViewFiles_NodeMouseClick);
+            //changed this to afterselect.
+            //treeViewFiles.NodeMouseClick +=
+                //new TreeNodeMouseClickEventHandler(treeViewFiles_NodeMouseClick);
 
             treeViewFiles.AfterSelect +=
                 new TreeViewEventHandler(treeViewFiles_AfterSelect);
+
+            treeViewFiles.NodeMouseDoubleClick +=
+                new TreeNodeMouseClickEventHandler(treeViewFiles_NodeMouseDoubleClick);
 
         }
 
         private void FormMain_Load(object sender, EventArgs e)
         {
             //temporary for testing:
-            txtToken.Text = "5POVRTzm3ZAAAAAAAAABwcZwXMCSEGQepWk7GDKjb_1yr_C7xMifXgE7QP7kv7Pi"; //dbtests.info
-            //txtToken.Text = "32Wp8V0dZ28AAAAAAADJlETVJXSVl4MdK_vjaDRxqFZ8_Id_qdbZPt0JoTOmfglU"; //hanfordinc.com
+            //txtToken.Text = "5POVRTzm3ZAAAAAAAAABwcZwXMCSEGQepWk7GDKjb_1yr_C7xMifXgE7QP7kv7Pi"; //dbtests.info
+            txtToken.Text = "32Wp8V0dZ28AAAAAAADJlETVJXSVl4MdK_vjaDRxqFZ8_Id_qdbZPt0JoTOmfglU"; //hanfordinc.com
 
             pictureBoxConnected.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBoxConnected.Image = imageList2.Images[2];
-
         }
 
         private void buttonConnect_Click(object sender, EventArgs e)
@@ -222,6 +225,48 @@ namespace DfB_Explorer
 
             // Set cursor as default arrow
             Cursor.Current = Cursors.Default;    
+        }
+
+        public void treeViewFiles_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            Console.WriteLine("Double Click");
+            //pop the save file dialog
+            saveFileDialog1.FileOk += saveFileDialog1_FileOk;
+            saveFileDialog1.FileName = e.Node.Text;
+            saveFileDialog1.ShowDialog();
+
+            //we need the path of the file we want to save
+            IList<int> path = GetNodePathIndexes(e.Node);
+
+            StringBuilder fullPath = new StringBuilder("treeview");
+            foreach (int index in path)
+            {
+                fullPath.AppendFormat(".Nodes[{0}]", index);
+            }
+            Console.WriteLine("Full path: " + fullPath);
+        }
+
+        private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public IList<int> GetNodePathIndexes(TreeNode node)
+        {
+            List<int> indexes = new List<int>();
+            TreeNode currentNode = node;
+            while (currentNode != null)
+            {
+                TreeNode parentNode = currentNode.Parent;
+                if (parentNode != null)
+                    indexes.Add(parentNode.Nodes.IndexOf(currentNode));
+                else
+                    indexes.Add(currentNode.TreeView.Nodes.IndexOf(currentNode));
+
+                currentNode = parentNode;
+            }
+            indexes.Reverse();
+            return indexes;
         }
 
         void treeViewUsers_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -250,13 +295,6 @@ namespace DfB_Explorer
                 treeViewFiles.Nodes.Add(treeNode);
             }
         }
-
-        void treeViewFiles_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            
-            
-        }
-
 
         protected void treeViewFiles_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
         {
@@ -296,14 +334,10 @@ namespace DfB_Explorer
                             treeNode.ImageKey = "folder_closed";
                         }
 
-                        //treeViewFiles.TopNode.Nodes.Add(treeNode);
-
                         string fullpath = treeViewFiles.SelectedNode.FullPath.ToString();
                         e.Node.Nodes.Add(treeNode);
 
-                        //treeViewFiles.Nodes[e.Node.Index].Nodes.Add(treeNode);
                         treeViewFiles.EndUpdate();
-                        //treeViewFiles.Nodes.Node.Expand();
                         e.Node.ExpandAll();
                     }
             }

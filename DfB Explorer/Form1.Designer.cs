@@ -31,14 +31,15 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.treeViewUsers = new System.Windows.Forms.TreeView();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.treeViewFiles = new System.Windows.Forms.TreeView();
             this.label1 = new System.Windows.Forms.Label();
             this.txtToken = new System.Windows.Forms.TextBox();
             this.buttonConnect = new System.Windows.Forms.Button();
             this.pictureBoxConnected = new System.Windows.Forms.PictureBox();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.labelTeamName = new System.Windows.Forms.Label();
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxConnected)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,6 +53,20 @@
             this.treeViewUsers.SelectedImageIndex = 3;
             this.treeViewUsers.Size = new System.Drawing.Size(262, 569);
             this.treeViewUsers.TabIndex = 0;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "tick");
+            this.imageList1.Images.SetKeyName(1, "unpluggedold");
+            this.imageList1.Images.SetKeyName(2, "user.png");
+            this.imageList1.Images.SetKeyName(3, "cloudusericon.png");
+            this.imageList1.Images.SetKeyName(4, "folder_closed");
+            this.imageList1.Images.SetKeyName(5, "folder_open");
+            this.imageList1.Images.SetKeyName(6, "file");
+            this.imageList1.Images.SetKeyName(7, "unplugged");
+            this.imageList1.Images.SetKeyName(8, "");
             // 
             // treeViewFiles
             // 
@@ -104,19 +119,6 @@
             this.pictureBoxConnected.TabIndex = 5;
             this.pictureBoxConnected.TabStop = false;
             // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "tick");
-            this.imageList1.Images.SetKeyName(1, "unpluggedold");
-            this.imageList1.Images.SetKeyName(2, "user.png");
-            this.imageList1.Images.SetKeyName(3, "cloudusericon.png");
-            this.imageList1.Images.SetKeyName(4, "folder_closed");
-            this.imageList1.Images.SetKeyName(5, "folder_open");
-            this.imageList1.Images.SetKeyName(6, "file");
-            this.imageList1.Images.SetKeyName(7, "unplugged");
-            // 
             // labelTeamName
             // 
             this.labelTeamName.AutoSize = true;
@@ -168,6 +170,7 @@
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Label labelTeamName;
         private System.Windows.Forms.ImageList imageList2;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 
