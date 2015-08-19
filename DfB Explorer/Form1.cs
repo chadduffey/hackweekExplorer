@@ -19,6 +19,7 @@ namespace DfB_Explorer
     public partial class FormMain : Form
     {
         DfBTeam gbl_TeamObject;
+        int gbl_current_member_index;
 
         [DataContract]
         class FolderListing
@@ -187,8 +188,8 @@ namespace DfB_Explorer
         private void FormMain_Load(object sender, EventArgs e)
         {
             //temporary for testing:
-            //txtToken.Text = "5POVRTzm3ZAAAAAAAAABwcZwXMCSEGQepWk7GDKjb_1yr_C7xMifXgE7QP7kv7Pi"; //dbtests.info
-            txtToken.Text = "32Wp8V0dZ28AAAAAAADJlETVJXSVl4MdK_vjaDRxqFZ8_Id_qdbZPt0JoTOmfglU"; //hanfordinc.com
+            txtToken.Text = "5POVRTzm3ZAAAAAAAAABwcZwXMCSEGQepWk7GDKjb_1yr_C7xMifXgE7QP7kv7Pi"; //dbtests.info
+            //txtToken.Text = "32Wp8V0dZ28AAAAAAADJlETVJXSVl4MdK_vjaDRxqFZ8_Id_qdbZPt0JoTOmfglU"; //hanfordinc.com
 
             pictureBoxConnected.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBoxConnected.Image = imageList2.Images[2];
@@ -223,7 +224,8 @@ namespace DfB_Explorer
         void treeViewUsers_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             treeViewFiles.Nodes.Clear();
-            FolderListing rootFolderListing = Get_listing("/", txtToken.Text, gbl_TeamObject.members[e.Node.Index].profile.member_id);
+            gbl_current_member_index = e.Node.Index;
+            FolderListing rootFolderListing = Get_listing("/", txtToken.Text, gbl_TeamObject.members[gbl_current_member_index].profile.member_id);
             foreach (FolderContent fc in rootFolderListing.contents)
             {
                 //strip the backslash for display in the tree
@@ -254,8 +256,12 @@ namespace DfB_Explorer
             {
                 string slashPath = "/" + e.Node.FullPath;
                 Console.WriteLine(slashPath);
-                FolderListing subfolder = Get_listing(slashPath, txtToken.Text, gbl_TeamObject.members[e.Node.Index].profile.member_id);
-                Console.WriteLine(subfolder.contents);
+                FolderListing subfolder = Get_listing(slashPath, txtToken.Text, gbl_TeamObject.members[gbl_current_member_index].profile.member_id);
+                if (subfolder.contents != null && subfolder.contents.Count > 0)
+                    foreach (FolderContent fc in subfolder.contents)
+                    {
+                        Console.WriteLine(fc.path);
+                    }
             }
             else
             {
@@ -409,9 +415,6 @@ namespace DfB_Explorer
 
         private FolderListing Get_listing(string folderpath, string dfb_token, string dfb_member_id)
         {
-            Console.WriteLine("Get_listing: folderpath: " + folderpath);
-            Console.WriteLine("Get_listing: folderpath: " + dfb_token);
-            Console.WriteLine("Get_listing: folderpath: " + dfb_member_id);
             
             if (folderpath == null)
             {
