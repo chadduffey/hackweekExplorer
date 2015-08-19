@@ -188,8 +188,8 @@ namespace DfB_Explorer
         private void FormMain_Load(object sender, EventArgs e)
         {
             //temporary for testing:
-            txtToken.Text = "5POVRTzm3ZAAAAAAAAABwcZwXMCSEGQepWk7GDKjb_1yr_C7xMifXgE7QP7kv7Pi"; //dbtests.info
-            //txtToken.Text = "32Wp8V0dZ28AAAAAAADJlETVJXSVl4MdK_vjaDRxqFZ8_Id_qdbZPt0JoTOmfglU"; //hanfordinc.com
+            //txtToken.Text = "5POVRTzm3ZAAAAAAAAABwcZwXMCSEGQepWk7GDKjb_1yr_C7xMifXgE7QP7kv7Pi"; //dbtests.info
+            txtToken.Text = "32Wp8V0dZ28AAAAAAADJlETVJXSVl4MdK_vjaDRxqFZ8_Id_qdbZPt0JoTOmfglU"; //hanfordinc.com
 
             pictureBoxConnected.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBoxConnected.Image = imageList2.Images[2];
@@ -251,6 +251,7 @@ namespace DfB_Explorer
 
         void treeViewFiles_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+
             //dont re-do the call if the node is already populated
             if (e.Node.IsExpanded == false && e.Node.ImageKey != "file")
             {
@@ -261,14 +262,52 @@ namespace DfB_Explorer
                     foreach (FolderContent fc in subfolder.contents)
                     {
                         Console.WriteLine(fc.path);
+                        //strip the backslash and parent folder deets for display in the tree
+                        string tmp = fc.path;
+                        int originatingFolderLength = slashPath.Length + 1;
+                        string tmpWithoutSlash = tmp.Substring(originatingFolderLength);
+
+                        treeViewFiles.BeginUpdate();
+                        Console.WriteLine(tmpWithoutSlash);
+                        TreeNode treeNode = new TreeNode(tmpWithoutSlash);
+
+                        //change icon for files/folders
+                        if (fc.is_dir == "false")
+                        {
+                            treeNode.ImageKey = "file";
+                            treeNode.SelectedImageKey = "file";
+                        }
+                        else
+                        {
+                            treeNode.ImageKey = "folder_closed";
+                        }
+                        
+                        //this prevents the duplicates showing up when clicking same folder again...
+                        RemoveChildNodes(e.Node);
+
+                        treeViewFiles.Nodes[e.Node.Index].Nodes.Add(treeNode);
+                        treeViewFiles.EndUpdate();
+                        treeViewFiles.Nodes[e.Node.Index].Expand();
                     }
             }
             else
             {
                 //second click user wants to collapse tree
-                e.Node.Collapse();
+                e.Node.Collapse(); 
             }
             
+        }
+
+        private void RemoveChildNodes(TreeNode aNode)
+        {
+            if (aNode.Nodes.Count > 0)
+            {
+                for (int i = aNode.Nodes.Count - 1; i >= 0; i--)
+                {
+                    aNode.Nodes[i].Remove();
+                }
+            }
+
         }
 
         private void populateDfBMembers(DfBTeam dfbTeam)
