@@ -230,6 +230,7 @@ namespace DfB_Explorer
         public void treeViewFiles_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             Console.WriteLine("Double Click");
+            Console.WriteLine("Full path: " + e.Node.FullPath);
             //pop the save file dialog
             saveFileDialog1.FileOk += saveFileDialog1_FileOk;
             saveFileDialog1.FileName = e.Node.Text;
@@ -243,12 +244,22 @@ namespace DfB_Explorer
             {
                 fullPath.AppendFormat(".Nodes[{0}]", index);
             }
-            Console.WriteLine("Full path: " + fullPath);
+            Console.WriteLine("After showdialog Full path: " + fullPath);
+
+            //implement the save...
+            string fixedpath = e.Node.FullPath.Replace("\\", "/");
+            Console.WriteLine("fixed path: " + fixedpath);
+            Console.WriteLine("from teh dialog: " + saveFileDialog1.FileName);
+
+            Cursor.Current = Cursors.WaitCursor;
+            download_file(fixedpath, txtToken.Text, gbl_TeamObject.members[gbl_current_member_index].profile.member_id, saveFileDialog1.FileName);
+            Cursor.Current = Cursors.Default;
         }
 
         private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
             //throw new NotImplementedException();
+            Console.WriteLine("we made it");
         }
 
         public IList<int> GetNodePathIndexes(TreeNode node)
@@ -585,6 +596,47 @@ namespace DfB_Explorer
             return brokenListing;
         } //end of get_listing
 
+        private void download_file(string folderpath, string dfb_token, string dfb_member_id, string output_file)
+        {
+
+            //string folderpath = "Mover/test.pdf";
+            //string dfb_token = "sJL4Mu3FYOMAAAAAAAAApZIXTM1kfWsrpQ3_WF9wmmHke5szxNbTlWJa9-67SIzj";
+
+            string uri = "https://api-content.dropbox.com/1/files/auto/" + folderpath; // +"?list=false";
+            WebRequest request = WebRequest.Create(uri);
+
+            request.Method = "GET";
+            String authheader = "Authorization:Bearer " + dfb_token;
+            request.Headers.Add(authheader);
+            request.Headers.Add("X-Dropbox-Perform-As-Team-Member:" + dfb_member_id);
+
+            try
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                // Get the stream containing content returned by the server.
+                Stream dataStream = response.GetResponseStream();
+
+                // Open the stream using a StreamReader for easy access.
+                //StreamReader reader = new StreamReader(dataStream);
+
+                System.IO.FileStream output = new FileStream(output_file, FileMode.Create);
+                dataStream.CopyTo(output);
+
+                //reader.Close();
+                dataStream.Close();
+                response.Close();
+                output.Close();
+
+            }
+
+            catch (WebException error)
+            {
+                Console.WriteLine(error);
+            }
+
+        }
 
     }
 }
