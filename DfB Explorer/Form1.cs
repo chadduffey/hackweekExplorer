@@ -195,8 +195,7 @@ namespace DfB_Explorer
         private void FormMain_Load(object sender, EventArgs e)
         {
             //temporary for testing:
-            //txtToken.Text = "5POVRTzm3ZAAAAAAAAABwcZwXMCSEGQepWk7GDKjb_1yr_C7xMifXgE7QP7kv7Pi"; //dbtests.info
-            txtToken.Text = "32Wp8V0dZ28AAAAAAADJlETVJXSVl4MdK_vjaDRxqFZ8_Id_qdbZPt0JoTOmfglU"; //hanfordinc.com
+            txtToken.Text = "234token"; //hanfordinc.com
 
             pictureBoxConnected.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBoxConnected.Image = imageList2.Images[2];
